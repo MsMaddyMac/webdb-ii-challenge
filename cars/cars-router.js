@@ -80,4 +80,32 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+// PUT request to update car in db
+router.put('/:id', validateCarId, (req, res) => {
+    const updates = req.body;
+    const id = req.params.id;
+
+    Cars.find(id)
+    .then(update => {
+        if(Object.keys(updates).length === 0) {
+            res
+            .status(400)
+            .json({ message: 'Changed your mind? There is nothing to update.' })
+        } else {
+            Cars.update(id, updates)
+            .then(updatedCar => {
+                res
+                .status(200)
+                .json({ message: 'Successfully update!', updatedCar });
+            })
+        }
+    })
+    .catch(err => {
+        console.log('Error updating car info.', err);
+        res
+        .status(500)
+        .json({ error: 'The car could not be updated.' });
+    });
+});
+
 module.exports = router;
