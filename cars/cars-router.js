@@ -56,4 +56,28 @@ router.post('/', validateCar, (req, res) => {
     })
 });
 
+// DELETE request to remove car from db by specified ID
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+
+    Cars.remove(id)
+    .then(count => {
+        if (count > 0) {
+            res
+            .status(200)
+            .json({ message: 'The car has been totaled.' });
+        } else {
+            res
+            .status(404)
+            .json({ message: 'The car could not be found.' });
+        }
+    })
+    .catch(err => {
+        console.log('Could not delete car.', err);
+        res
+        .status(500)
+        .json({ error: 'Error removing car.' });
+    });
+});
+
 module.exports = router;
