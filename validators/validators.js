@@ -8,7 +8,7 @@ module.exports = { validateCarId, validateCar }
 function validateCarId(req, res, next) {
     const id = req.params.id;
 
-    Cars.get(id)
+    Cars.findById(id)
         .then(car => {
             if (car) {
                 next();
