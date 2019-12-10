@@ -38,4 +38,22 @@ router.get('/:id', validateCarId, (req, res) => {
     });
 });
 
+// POST request to add new car to db
+router.post('/', validateCar, (req, res) => {
+    const newCar = req.body;
+
+    Cars.add(newCar)
+    .then(car => {
+        res
+        .status(201)
+        .json(car);
+    })
+    .catch(err => {
+        console.log('Error adding new car.', err);
+        res
+        .status(500)
+        .json({ error: 'Error adding new car.' });
+    })
+});
+
 module.exports = router;
