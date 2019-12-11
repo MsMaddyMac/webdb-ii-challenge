@@ -5,7 +5,8 @@ module.exports = {
     findById,
     add,
     remove,
-    update
+    update,
+    findCarSales
 };
 
 function find(query) {
@@ -42,4 +43,11 @@ function update(id, changes) {
     return db('cars')
         .where({ id })
         .update(changes, '*');
+}
+
+function findCarSales(carId) {
+    return db('sales as s')
+        .join('cars as c', 's.car_id', 'c.id')
+        .select('s.id', 's.sale_price', 'c.id as carId', 'c.make as carMake', 'c.model as carModel', 'c.VIN as carVIN')
+        .where({ car_id: carId });
 }
