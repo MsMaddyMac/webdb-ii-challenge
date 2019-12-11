@@ -1,6 +1,7 @@
 const express = require('express');
 
 const Cars = require('./cars-model');
+const Sales = require('../sales/sales-model');
 
 const { validateCarId, validateCar } = require('../validators/validators');
 
@@ -105,6 +106,33 @@ router.put('/:id', validateCarId, (req, res) => {
         res
         .status(500)
         .json({ error: 'The car could not be updated.' });
+    });
+});
+
+// ***** SUB ROUTES *****
+// GET endpoint to retrieve sale for a car
+router.get('/:id/sales', (req, res) => {
+    Cars.findCarSales(req.params.id)
+    .then(sales => {
+        res.status(200).json(sales);
+    })
+    .catch(err => {
+        console.log('Error getting sale for car.', err);
+        res.status(500).json({ error: 'Error getting sale for car.' });
+    });
+});
+
+// POST endpoint to add a sale for a car by ID
+router.post('/:id/sales', (req, res) => {
+    const saleData = { ...req.body, car_id: req.params.id };
+
+    Sales.add(saleData)
+    .then(sale => {
+        res.status(201).json(sale);
+    })
+    .catch(err => {
+        console.log('Error adding new sale.', err);
+        res.status(500).json({ error: 'Error adding new sale.' })
     });
 });
 
